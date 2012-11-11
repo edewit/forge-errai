@@ -11,11 +11,10 @@ public class ErraiBusFacet extends ErraiBaseFacet{
 	@Override
 	void installErraiFacetSpecifics() {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	boolean isFacetInstalled() {
+    protected boolean isFacetInstalled() {
         if (!project.hasFacet(ErraiBusFacet.class)) {
     		return false;
         }

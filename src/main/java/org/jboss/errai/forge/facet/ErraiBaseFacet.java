@@ -52,7 +52,6 @@ public abstract class ErraiBaseFacet extends BaseFacet
    /**
     * Install the maven dependencies required for Errai
     * 
-    * @param version
     */
    private void installBaseErraiDependencies()
    {

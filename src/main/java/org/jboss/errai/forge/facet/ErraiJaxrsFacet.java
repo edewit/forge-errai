@@ -33,7 +33,7 @@ public class ErraiJaxrsFacet extends ErraiBaseFacet{
 	}
 
 	@Override
-	boolean isFacetInstalled() {
+    protected boolean isFacetInstalled() {
         if (!project.hasFacet(ErraiJaxrsFacet.class)) {
     		return false;
         }

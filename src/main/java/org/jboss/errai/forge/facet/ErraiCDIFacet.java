@@ -81,7 +81,7 @@ public class ErraiCDIFacet extends ErraiBaseFacet{
 	}
 
 	@Override
-	boolean isFacetInstalled() {
+    protected boolean isFacetInstalled() {
         if (!project.hasFacet(ErraiCDIFacet.class)) {
     		return false;
         }
