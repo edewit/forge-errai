@@ -13,7 +13,7 @@
   	<!-- Plugin specific properties -->
     <plugin.javaee.version>3.0.1.Final</plugin.javaee.version>
     <plugin.project.version>${project.version}</plugin.project.version>
-    <plugin.errai.version>2.2-SNAPSHOT</plugin.errai.version>
+    <plugin.errai.version>2.2.0-SNAPSHOT</plugin.errai.version>
     <plugin.gwt.version>2.5.0</plugin.gwt.version>
     <plugin.servlet-api.version>2.5</plugin.servlet-api.version>
     <plugin.jsp-api.version>2.0</plugin.jsp-api.version>
