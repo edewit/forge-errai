@@ -72,7 +72,7 @@ public class ErraiUIFacet extends ErraiBaseFacet implements ScaffoldProvider {
     }
 
 	@Override
-    protected void  installErraiDeps() {
+    public void  installErraiFacetSpecifics() {
 		  String erraiVersion = Versions.getInstance().getErrai_version();
 		  String javaeeVersion = Versions.getInstance().getJavaee_version();
 		  
@@ -90,7 +90,7 @@ public class ErraiUIFacet extends ErraiBaseFacet implements ScaffoldProvider {
 	}
 
 	@Override
-    protected boolean isFacetInstalled() {
+    public boolean isFacetInstalled() {
         if (!project.hasFacet(ErraiUIFacet.class)) {
     		return false;
         }

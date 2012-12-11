@@ -24,6 +24,7 @@ public class ErraiCDIFacet extends ErraiBaseFacet{
 
 
 	@Override
+	public
 	void installErraiFacetSpecifics() {
 		  String erraiVersion = Versions.getInstance().getErrai_version();
 		//TODO list here all the CDI dependencies
@@ -81,7 +82,7 @@ public class ErraiCDIFacet extends ErraiBaseFacet{
 	}
 
 	@Override
-    protected boolean isFacetInstalled() {
+	public boolean isFacetInstalled() {
         if (!project.hasFacet(ErraiCDIFacet.class)) {
     		return false;
         }

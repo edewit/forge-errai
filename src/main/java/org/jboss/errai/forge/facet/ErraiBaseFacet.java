@@ -28,8 +28,8 @@ public abstract class ErraiBaseFacet extends BaseFacet
 	@Inject
 	public DependencyInstaller installer;
 	
-	abstract void installErraiFacetSpecifics();
-	abstract boolean isFacetInstalled();
+	public abstract void installErraiFacetSpecifics();
+	public abstract boolean isFacetInstalled();
 
 	public boolean install() {
 		
