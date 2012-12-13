@@ -1,30 +1,22 @@
 package org.jboss.errai.forge;
 
-import java.io.InputStream;
-
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 
-import org.jboss.errai.forge.enums.ErraiBusCommandsEnum;
 import org.jboss.errai.forge.enums.ErraiExamplesCommandsEnum;
 import org.jboss.errai.forge.enums.ErraiFacetsEnum;
-import org.jboss.errai.forge.enums.ErraiGeneratorCommandsEnum;
-import org.jboss.errai.forge.enums.ErraiMarshalingCommandsEnum;
-import org.jboss.errai.forge.enums.ErraiViaDefinitionEnum;
+import org.jboss.errai.forge.enums.FacetsEnum;
 import org.jboss.errai.forge.example.ErraiBusExample;
 import org.jboss.errai.forge.example.ErraiCdiExample;
 import org.jboss.errai.forge.example.ErraiJaxrsExample;
 import org.jboss.errai.forge.example.ErraiUIExample;
 import org.jboss.errai.forge.facet.ErraiBaseFacet;
-import org.jboss.errai.forge.facet.ErraiBusFacet;
 import org.jboss.errai.forge.facet.ErraiExampleFacet;
 import org.jboss.errai.forge.facet.ErraiInstalled;
 import org.jboss.errai.forge.gen.Generator;
 import org.jboss.errai.forge.template.Velocity;
 import org.jboss.forge.project.Project;
 import org.jboss.forge.project.facets.events.InstallFacets;
-import org.jboss.forge.resources.DirectoryResource;
-import org.jboss.forge.resources.FileResource;
 import org.jboss.forge.shell.ShellColor;
 import org.jboss.forge.shell.ShellMessages;
 import org.jboss.forge.shell.ShellPrompt;
@@ -42,7 +34,7 @@ import org.jboss.forge.shell.plugins.SetupCommand;
  */
 @Alias("errai")
 @RequiresProject
-public class ErraiPlugin implements Plugin {
+public class ErraiPlugin extends AbstractPlugin implements Plugin {
 
     final Project project;
     final Event<InstallFacets> installFacets;
@@ -64,6 +56,7 @@ public class ErraiPlugin implements Plugin {
 
 	@Inject
     public ErraiPlugin(final Project project, final Event<InstallFacets> event) {
+		super(project);
         this.project = project;
         this.installFacets = event;
         this.velocity = new Velocity(this.getProject());
@@ -120,7 +113,7 @@ public class ErraiPlugin implements Plugin {
 		}
 		
 		//check example facet installation
-        if (!getProject().hasFacet(ErraiFacetsEnum.ERRAI_EXAMPLES.getFacet())) {
+        if (!getProject().hasFacet(FacetsEnum.ERRAI_EXAMPLES.getFacet())) {
         	out.println("Errai Example Facet is not installed. Use 'errai examples setup' to get started.");
         	return;
         }
@@ -158,126 +151,4 @@ public class ErraiPlugin implements Plugin {
 	    		new ErraiUIExample(this, out).uninstall();break;
 		}
     }
-	
-	//errai-bus
-	@Command("bus")
-    public void errai_bus_setup(
-    		@Option final ErraiBusCommandsEnum command,
-    		@Option(name="from") String from, final PipeOut out) {
-		
-		//setup bus facet
-		switch (command) {
-			case ERRAI_BUS_SETUP_FACET:
-				installFacets.fire(new InstallFacets(ErraiBusFacet.class));
-				return;
-			case ERRAI_BUS_SETUP_PROPS:
-				DirectoryResource projectRoot = project.getProjectRoot();				
-		        DirectoryResource sourceRoot = projectRoot.getOrCreateChildDirectory("src").
-		        		getOrCreateChildDirectory("main").getOrCreateChildDirectory("resources");
-		        //create App props
-		        FileResource<?> appIndexPage = (FileResource<?>) sourceRoot.getChild("ErraiApp.properties");
-		        InputStream stream = ErraiPlugin.class.getResourceAsStream("/errai-bus/resources/ErraiApp.properties");
-		        appIndexPage.setContents(stream);
-		        out.println(ShellColor.YELLOW, String.format(ErraiBaseFacet.SUCCESS_MSG_FMT, "ErraiApp.properties", "file"));
-		        break;
-			case ERRAI_BUS_SETUP_LOG:
-				projectRoot = project.getProjectRoot();				
-		        sourceRoot = projectRoot.getOrCreateChildDirectory("src").
-		        		getOrCreateChildDirectory("main").getOrCreateChildDirectory("resources");
-		        //create log4j props
-		        FileResource<?> log4jIndexPage = (FileResource<?>) sourceRoot.getChild("log4j.properties");
-		        stream = ErraiPlugin.class.getResourceAsStream("/errai-bus/resources/log4j.properties");
-		        log4jIndexPage.setContents(stream);
-		        out.println(ShellColor.YELLOW, String.format(ErraiBaseFacet.SUCCESS_MSG_FMT, "log4j.properties", "file"));
-		        break;
-		}
-		
-		//check bus facet installation
-        if (!getProject().hasFacet(ErraiFacetsEnum.ERRAI_BUS.getFacet())) {
-        	out.println("Errai Bus Facet is not installed. Use 'errai bus setup' to get started.");
-        	return;
-        }
-		
-        //bus commands options
-		if(command.equals(ErraiBusCommandsEnum.ERRAI_BUS_GENERATE_EMPTY_SERVICE_CLASS)){
-			// TODO @Service Impl empty template generation
-			velocity.createJavaSourceWithTemplateName("YourEmptyServiceImpl.java.vm");
-		}
-		if(command.equals(ErraiBusCommandsEnum.ERRAI_BUS_GENERATE_SIMPLE_SERVICE_CLASS)){
-			// TODO @Service Impl empty template generation
-			velocity.createJavaSourceWithTemplateName("SimpleServiceImpl.java.vm");
-		}
-		if(command.equals(ErraiBusCommandsEnum.ERRAI_BUS_GENERATE_REMOTES_FROM_ALL_SERVICE_CLASSES)){
-			// generate @Remote interfaces for all @Service classes
-			generator.generate(ErraiGeneratorCommandsEnum.ERRAI_BUS_GENERATE_REMOTES_FROM_ALL_SERVICE_CLASSES);
-		}
-		if(command.equals(ErraiBusCommandsEnum.ERRAI_BUS_GENERATE_REMOTE_FROM_SERVICE_CLASS)){
-			// generate @Remote interface for given @Service class
-	        System.out.println("from: " + from);
-			if(from != null){
-				generator.generate(ErraiGeneratorCommandsEnum.ERRAI_BUS_GENERATE_REMOTE_FROM_SERVICE_CLASS,from);
-			}
-		}
-		if(command.equals(ErraiBusCommandsEnum.ERRAI_BUS_RPC_INVOKE_ENDPOINT)){
-			// do rpc invoke
-			// TODO generate here service call with optional success/error callbacks
-	        out.println(ShellColor.BLUE, "do rpc invoke:");
-		}
-    }
-	
-	//errai-marshaling
-	@Command("marshaling")
-    public void errai_marshaling_setup(
-    		@Option final ErraiMarshalingCommandsEnum command,
-    		@Option(name="from", required=true) String from, 
-    		@Option(name="recursive", defaultValue="false", required=true) boolean recursive,
-    		@Option(name="via", defaultValue="ANNOTATION", required=true) final ErraiViaDefinitionEnum via, final PipeOut out) {
-		
-		//setup bus facet
-		switch (command) {
-		case ERRAI_MARSHALING_SETUP:
-			installFacets.fire(new InstallFacets(ErraiBusFacet.class));
-			return;
-		}
-		
-		//check marshaling facet installation
-        if (!getProject().hasFacet(ErraiFacetsEnum.ERRAI_BUS.getFacet())) {
-        	out.println("Errai Marshaling Facet is not installed. Use 'errai marshaling setup' to get started.");
-        	return;
-        }
-		
-        // commands
-		if(command.equals(ErraiMarshalingCommandsEnum.ERRAI_MARSHALING_SET_PORTABLE)){
-			// generate @Portable for defined classes
-			if(via.toString().equals(ErraiViaDefinitionEnum.ANNOTATION.toString())) {
-				//use annotation inside classes
-				if(recursive == true) {
-					generator.generate(ErraiGeneratorCommandsEnum.ERRAI_MARSHALING_SET_PORTABLE_RECURSIVE, from);
-				}
-				else {
-					generator.generate(ErraiGeneratorCommandsEnum.ERRAI_MARSHALING_SET_PORTABLE, from);				
-				}
-			}
-			else {
-				// use definitions inside ErraiApp.properties
-				if(recursive == true) {
-					generator.generate(ErraiGeneratorCommandsEnum.ERRAI_MARSHALING_SET_PORTABLE_RECURSIVE_VIA_CONFIG, from);
-				}
-				else {
-					generator.generate(ErraiGeneratorCommandsEnum.ERRAI_MARSHALING_SET_PORTABLE_VIA_CONFIG, from);				
-				}
-			}
-		}
-		if(command.equals(ErraiMarshalingCommandsEnum.ERRAI_MARSHALING_IMMUTABLE_BUILDER)){
-			if(recursive == true) {
-				generator.generate(ErraiGeneratorCommandsEnum.ERRAI_MARSHALING_IMMUTABLE_BUILDER_RECURSIVE, from);
-			}
-			else {
-				generator.generate(ErraiGeneratorCommandsEnum.ERRAI_MARSHALING_IMMUTABLE_BUILDER, from);				
-			}
-		}
-    }
-	
-
-	
 }

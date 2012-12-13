@@ -21,7 +21,7 @@
  */
 package org.jboss.errai.forge;
 
-import org.jboss.errai.forge.facet.ui.ErraiUIFacet;
+import org.jboss.errai.forge.facet.ErraiUIFacet;
 import org.jboss.errai.forge.metawidget.config.ForgeConfigReader;
 import org.jboss.forge.env.Configuration;
 import org.jboss.forge.parser.JavaParser;
