@@ -96,7 +96,7 @@ public class ErraiBusPlugin extends AbstractPlugin implements Plugin {
 	
 	@Command("setup-Errai.properties")
 	public void bus_setup_props(final PipeOut out){
-		if(!this.isFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
+		if(!this.isProjectSpecificFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
 			return;
 		DirectoryResource projectRoot = project.getProjectRoot();				
         DirectoryResource sourceRoot = projectRoot.getOrCreateChildDirectory("src").
@@ -110,7 +110,7 @@ public class ErraiBusPlugin extends AbstractPlugin implements Plugin {
 	
 	@Command("setup-log4j.properties")
 	public void bus_setup_log(final PipeOut out){
-		if(!this.isFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
+		if(!this.isProjectSpecificFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
 			return;
 		DirectoryResource projectRoot = project.getProjectRoot();				
         DirectoryResource sourceRoot = projectRoot.getOrCreateChildDirectory("src").
@@ -127,7 +127,7 @@ public class ErraiBusPlugin extends AbstractPlugin implements Plugin {
 	
 	@Command("rpc-generate-empty-service-impl")
 	public void bus_rpc_generate_empty_service_impl(final PipeOut out){
-		if(!this.isFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
+		if(!this.isProjectSpecificFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
 			return;
 		// @Service Impl empty template generation
 		velocity.createJavaSourceWithTemplateName("YourEmptyServiceImpl.java.vm");
@@ -135,7 +135,7 @@ public class ErraiBusPlugin extends AbstractPlugin implements Plugin {
 	
 	@Command("rpc-generate-simple-service-impl")
 	public void bus_rpc_generate_simple_service_impl(final PipeOut out){
-		if(!this.isFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
+		if(!this.isProjectSpecificFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
 			return;
 		// @Service Impl empty simple class generation
 		velocity.createJavaSourceWithTemplateName("SimpleServiceImpl.java.vm");
@@ -143,7 +143,7 @@ public class ErraiBusPlugin extends AbstractPlugin implements Plugin {
 	
 	@Command("rpc-generate-remotes-for-all-services")
 	public void bus_rpc_generate_remotes_for_all_services(final PipeOut out){
-		if(!this.isFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
+		if(!this.isProjectSpecificFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
 			return;
 		// generate @Remote interfaces for all @Service classes
 		generator.generate(ErraiGeneratorCommandsEnum.ERRAI_BUS_GENERATE_REMOTES_FROM_ALL_SERVICE_CLASSES);
@@ -151,7 +151,7 @@ public class ErraiBusPlugin extends AbstractPlugin implements Plugin {
 	
 	@Command("rpc-generate-remote-from-service")
 	public void bus_rpc_generate_remote_from_service(@Option(name="from") String from, final PipeOut out){
-		if(!this.isFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
+		if(!this.isProjectSpecificFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
 			return;
 		// generate @Remote interface for given @Service class
         System.out.println("from: " + from);
@@ -162,7 +162,7 @@ public class ErraiBusPlugin extends AbstractPlugin implements Plugin {
 	
 	@Command("rpc-invoke-endpoint")
 	public void bus_rpc_invoke_endpoint(final PipeOut out){
-		if(!this.isFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
+		if(!this.isProjectSpecificFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
 			return;
 		// do rpc invoke
 		// TODO generate here service call with optional success/error callbacks

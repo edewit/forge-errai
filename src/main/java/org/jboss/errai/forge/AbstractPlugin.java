@@ -15,7 +15,7 @@ public abstract class AbstractPlugin {
 	
 	//check given facet installation
 	boolean isFacetInstalled(Class<? extends BaseFacet> facet,PipeOut out){ 		
-	    if (project.hasFacet(facet)) {
+	    if (!project.hasFacet(facet)) {
 	    	out.println(facet.getName() + " is not installed. Use 'setup' to get started.");
 	    	return false;
 	    }
@@ -24,7 +24,7 @@ public abstract class AbstractPlugin {
 	
 	//check project specific given facet installation
 	boolean isProjectSpecificFacetInstalled(Class<? extends ErraiBaseFacet> facet,PipeOut out){ 		
-	    if (project.hasFacet(facet)) {
+	    if (!project.hasFacet(facet)) {
 	    	out.println(facet.getName() + " is not installed. Use 'setup' to get started.");
 	    	return false;
 	    }
