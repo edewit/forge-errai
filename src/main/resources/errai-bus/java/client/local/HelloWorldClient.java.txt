@@ -1,4 +1,4 @@
-package ${package}.client.local;
+package client.local;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -58,7 +58,7 @@ public class HelloWorldClient extends VerticalPanel {
   void sendMessage() {
     MessageBuilder.createMessage()
         .toSubject("HelloWorldService")
-        .withValue("Hello, There!")
+        .withValue(message.getText())
         .done()
         .repliesTo(new MessageCallback() {
           public void callback(Message message) {

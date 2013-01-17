@@ -14,11 +14,12 @@
     <plugin.javaee.version>3.0.1.Final</plugin.javaee.version>
     <plugin.project.version>${project.version}</plugin.project.version>
     <plugin.errai.version>2.2.0-SNAPSHOT</plugin.errai.version>
-    <plugin.gwt.version>2.5.0</plugin.gwt.version>
+    <plugin.gwt.version>2.4.0</plugin.gwt.version>
     <plugin.servlet-api.version>2.5</plugin.servlet-api.version>
     <plugin.jsp-api.version>2.0</plugin.jsp-api.version>
     <plugin.ejb3-api.version>3.1.0</plugin.ejb3-api.version>
     <plugin.cdi-api.version>1.0-SP4</plugin.cdi-api.version>
+    <plugin.slf4j.version>1.6.1</plugin.slf4j.version>
     <plugin.jetty.version>6.1.25</plugin.jetty.version>
     <plugin.weld.version>1.6.1.Final</plugin.weld.version>
     <plugin.resteasy.version>2.2.3.GA</plugin.resteasy.version>
