@@ -1,7 +1,7 @@
-package ${package}.server;
+package server;
 
-import ${package}.client.shared.HelloMessage;
-import ${package}.client.shared.Response;
+import client.shared.HelloMessage;
+import client.shared.Response;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.event.Event;

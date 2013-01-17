@@ -1,4 +1,4 @@
-package ${package}.client.local;
+package client.local;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
@@ -15,8 +15,8 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 
-import ${package}.client.shared.HelloMessage;
-import ${package}.client.shared.Response;
+import client.shared.HelloMessage;
+import client.shared.Response;
 
 /**
  * Main application entry point.

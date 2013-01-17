@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.jboss.errai</groupId>
-  <artifactId>errai-bus</artifactId>
+  <artifactId>errai-cdi</artifactId>
   <version>${plugin.project.version}</version>
   <packaging>war</packaging>
   <dependencies>
