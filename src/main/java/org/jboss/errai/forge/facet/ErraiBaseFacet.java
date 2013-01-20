@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.maven.model.Model;
+import org.jboss.forge.maven.MavenCoreFacet;
 import org.jboss.forge.maven.MavenPluginFacet;
 import org.jboss.forge.project.dependencies.Dependency;
 import org.jboss.forge.project.dependencies.DependencyBuilder;
@@ -37,6 +39,7 @@ public abstract class ErraiBaseFacet extends BaseFacet
 			installBaseErraiDependencies();
 			installGWTPlugin();
 			installCleanPlugin();
+			setDirectoryOutput();
 	    }
 	    else{
 	    	ErraiInstalled.getInstance().setInstalled(true);
@@ -75,6 +78,14 @@ public abstract class ErraiBaseFacet extends BaseFacet
       for (Dependency dependency : dependencies) {
          deps.addDirectDependency(dependency);
       }
+   }
+   
+   private void setDirectoryOutput(){
+	    MavenCoreFacet mvnCoreFacet = project.getFacet(MavenCoreFacet.class);
+	    Model model = mvnCoreFacet.getPOM();
+	    model.getBuild().setOutputDirectory(Versions.getInstance().getOutput_dir());
+	    mvnCoreFacet.setPOM(model);
+	    
    }
    
    public void  installGWTPlugin() {

@@ -11,6 +11,7 @@ public class Versions {
 	private String javaee_version;
 	private String slf4j_version;
 	private String maven_clean_plugin_version;
+	private String output_dir;
 	
 	private static Versions instance;
 	
@@ -27,6 +28,7 @@ public class Versions {
 		this.javaee_version = configProp.getProperty("javaee.version");
 		this.slf4j_version = configProp.getProperty("slf4j.version");
 		this.maven_clean_plugin_version = configProp.getProperty("maven.clean.plugin.version");
+		this.output_dir = configProp.getProperty("output.dir");
 	}
 
 	public static Versions getInstance(){
@@ -53,5 +55,9 @@ public class Versions {
 
 	public String getMaven_clean_plugin_version() {
 		return maven_clean_plugin_version;
+	}
+
+	public String getOutput_dir() {
+		return output_dir;
 	}
 }
