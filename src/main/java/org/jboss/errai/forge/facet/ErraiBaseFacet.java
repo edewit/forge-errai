@@ -36,6 +36,7 @@ public abstract class ErraiBaseFacet extends BaseFacet
 	    if (!ErraiInstalled.getInstance().isInstalled()) {
 			installBaseErraiDependencies();
 			installGWTPlugin();
+			installCleanPlugin();
 	    }
 	    else{
 	    	ErraiInstalled.getInstance().setInstalled(true);
@@ -57,12 +58,16 @@ public abstract class ErraiBaseFacet extends BaseFacet
    {
 	  String erraiVersion = Versions.getInstance().getErrai_version();
 	  String gwtVersion= Versions.getInstance().getGwt_version();
+	  String slf4jVersion= Versions.getInstance().getSlf4j_version();
+	  
       List<? extends Dependency> dependencies = Arrays.asList(
               DependencyBuilder.create("org.jboss.errai:errai-bus:" + erraiVersion),
+              DependencyBuilder.create("org.jboss.errai:errai-common:" + erraiVersion),
               DependencyBuilder.create("org.jboss.errai:errai-ioc:" + erraiVersion),
               DependencyBuilder.create("org.jboss.errai:errai-tools:" + erraiVersion),
               DependencyBuilder.create("com.google.gwt:gwt-servlet:" + gwtVersion),
-              DependencyBuilder.create("com.google.gwt:gwt-user:" + gwtVersion)
+              DependencyBuilder.create("com.google.gwt:gwt-user:" + gwtVersion),
+              DependencyBuilder.create("org.slf4j:slf4j-log4j12:" + slf4jVersion)
       );
 
 	   
@@ -79,5 +84,12 @@ public abstract class ErraiBaseFacet extends BaseFacet
 	    	pluginFacet.addPlugin(erraiGWTPlugin.getGwtPlugin());
 	    }
    }
-	
+   
+   public void  installCleanPlugin() {
+	   	ErraiCleanMavenPlugin erraiCleanPlugin = new ErraiCleanMavenPlugin();
+	    MavenPluginFacet pluginFacet = project.getFacet(MavenPluginFacet.class);
+	    if(! pluginFacet.hasPlugin(erraiCleanPlugin.getCleanDependencyBuilder())) {
+	    	pluginFacet.addPlugin(erraiCleanPlugin.getCleanPlugin());
+	    }
+  }
 }

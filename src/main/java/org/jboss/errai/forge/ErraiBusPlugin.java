@@ -94,7 +94,7 @@ public class ErraiBusPlugin extends AbstractPlugin implements Plugin {
 
 	//errai-bus
 	
-	@Command("setup-Errai.properties")
+	@Command("setup-properties")
 	public void bus_setup_props(final PipeOut out){
 		if(!this.isProjectSpecificFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
 			return;
@@ -106,24 +106,70 @@ public class ErraiBusPlugin extends AbstractPlugin implements Plugin {
         InputStream stream = ErraiBusPlugin.class.getResourceAsStream("/errai-bus/resources/ErraiApp.properties");
         appIndexPage.setContents(stream);
         out.println(ShellColor.YELLOW, String.format(ErraiBaseFacet.SUCCESS_MSG_FMT, "ErraiApp.properties", "file"));
+        
+        //create Service props
+        FileResource<?> serviceIndexPage = (FileResource<?>) sourceRoot.getChild("ErraiService.properties");
+        stream = ErraiPlugin.class.getResourceAsStream("/errai-bus/resources/ErraiService.properties");
+        serviceIndexPage.setContents(stream);
+        out.println(ShellColor.YELLOW, String.format(ErraiBaseFacet.SUCCESS_MSG_FMT, "ErraiService.properties", "file"));
+        
+        
+        //create log4j props
+        FileResource<?> log4jIndexPage = (FileResource<?>) sourceRoot.getChild("log4j.properties");
+        stream = ErraiBusPlugin.class.getResourceAsStream("/errai-bus/resources/log4j.properties");
+        log4jIndexPage.setContents(stream);
+        out.println(ShellColor.YELLOW, String.format(ErraiBaseFacet.SUCCESS_MSG_FMT, "log4j.properties", "file"));
+        
 	}
 	
-	@Command("setup-log4j.properties")
-	public void bus_setup_log(final PipeOut out){
+	//TODO add here a generation of user predefined name app
+	@Command("setup-simple-webapp")
+	public void bus_setup_simple_webbapp(@Option(name="appName", required=true) String appName, final PipeOut out){
 		if(!this.isProjectSpecificFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
 			return;
 		DirectoryResource projectRoot = project.getProjectRoot();				
         DirectoryResource sourceRoot = projectRoot.getOrCreateChildDirectory("src").
-        		getOrCreateChildDirectory("main").getOrCreateChildDirectory("resources");
-        projectRoot = project.getProjectRoot();				
-        sourceRoot = projectRoot.getOrCreateChildDirectory("src").
-        		getOrCreateChildDirectory("main").getOrCreateChildDirectory("resources");
-        //create log4j props
-        FileResource<?> log4jIndexPage = (FileResource<?>) sourceRoot.getChild("log4j.properties");
-        InputStream stream = ErraiBusPlugin.class.getResourceAsStream("/errai-bus/resources/log4j.properties");
-        log4jIndexPage.setContents(stream);
-        out.println(ShellColor.YELLOW, String.format(ErraiBaseFacet.SUCCESS_MSG_FMT, "log4j.properties", "file"));
+        		getOrCreateChildDirectory("main").getOrCreateChildDirectory("webapp");
+        
+        // create WEB-INF/web.xml
+        DirectoryResource wiDirectory = sourceRoot.getOrCreateChildDirectory("WEB-INF");
+        FileResource<?> wiPage = (FileResource<?>) wiDirectory.getChild("web.xml");
+        InputStream stream = ErraiPlugin.class.getResourceAsStream("/errai-bus/webapp/WEB-INF/web.xml");
+        wiPage.setContents(stream);
+        out.println(ShellColor.YELLOW, String.format(ErraiBaseFacet.SUCCESS_MSG_FMT, "WEB-INF/web.xml", "file"));
+
+        // create App.css
+        FileResource<?> appPage = (FileResource<?>) sourceRoot.getChild("App.css");
+        stream = ErraiPlugin.class.getResourceAsStream("/errai-bus/webapp/App.css");
+        appPage.setContents(stream);
+        out.println(ShellColor.YELLOW, String.format(ErraiBaseFacet.SUCCESS_MSG_FMT, "App.css", "file"));
+
+        // create App.html
+        FileResource<?> apphPage = (FileResource<?>) sourceRoot.getChild("App.html");
+        stream = ErraiPlugin.class.getResourceAsStream("/errai-bus/webapp/App.html");
+        apphPage.setContents(stream);
+        out.println(ShellColor.YELLOW, String.format(ErraiBaseFacet.SUCCESS_MSG_FMT, "App.html", "file"));
 	}
+	
+	//TODO add here feature of editing gwt config file 
+	// 			- adding module / deleting module
+	
+	
+	@Command("setup-simple-application-gwt-config-file")
+	public void bus_setup_simple_applicaiton_gwt_config(final PipeOut out){
+		if(!this.isProjectSpecificFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
+			return;
+		DirectoryResource projectRoot = project.getProjectRoot();				
+        DirectoryResource sourceRoot = projectRoot.getOrCreateChildDirectory("src").
+        		getOrCreateChildDirectory("main").getOrCreateChildDirectory("java");
+        
+        //create App.gwt config file
+        FileResource<?> confIndexPage = (FileResource<?>) sourceRoot.getChild("App.gwt.xml");
+        InputStream cfStream = ErraiPlugin.class.getResourceAsStream("/errai-bus/java/App.gwt.xml.txt");
+        confIndexPage.setContents(cfStream);
+        out.println(ShellColor.YELLOW, String.format(ErraiBaseFacet.SUCCESS_MSG_FMT, "App.gwt.xml", "file"));
+	}
+	
 	
 	@Command("rpc-generate-empty-service-impl")
 	public void bus_rpc_generate_empty_service_impl(final PipeOut out){

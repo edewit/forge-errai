@@ -24,6 +24,7 @@
     <plugin.weld.version>1.1.6.Final</plugin.weld.version>
     <plugin.resteasy.version>2.2.3.GA</plugin.resteasy.version>
     <plugin.jboss-logging.version>3.0.0.Beta4</plugin.jboss-logging.version>
+    <plugin.maven.clean.plugin.version>2.4.1</plugin.maven.clean.plugin.version>
   </properties>
   <dependencies>
     <dependency>

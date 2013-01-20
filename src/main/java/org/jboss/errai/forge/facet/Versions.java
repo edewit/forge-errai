@@ -9,6 +9,8 @@ public class Versions {
 	private String errai_version;
 	private String gwt_version;
 	private String javaee_version;
+	private String slf4j_version;
+	private String maven_clean_plugin_version;
 	
 	private static Versions instance;
 	
@@ -23,6 +25,8 @@ public class Versions {
 		this.errai_version = configProp.getProperty("errai.version");
 		this.gwt_version = configProp.getProperty("gwt.version");
 		this.javaee_version = configProp.getProperty("javaee.version");
+		this.slf4j_version = configProp.getProperty("slf4j.version");
+		this.maven_clean_plugin_version = configProp.getProperty("maven.clean.plugin.version");
 	}
 
 	public static Versions getInstance(){
@@ -41,5 +45,13 @@ public class Versions {
 
 	public String getJavaee_version() {
 		return javaee_version;
+	}
+
+	public String getSlf4j_version() {
+		return slf4j_version;
+	}
+
+	public String getMaven_clean_plugin_version() {
+		return maven_clean_plugin_version;
 	}
 }
