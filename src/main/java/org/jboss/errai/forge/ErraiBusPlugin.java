@@ -12,6 +12,7 @@ import org.jboss.errai.forge.facet.ErraiInstalled;
 import org.jboss.errai.forge.gen.Generator;
 import org.jboss.errai.forge.template.Velocity;
 import org.jboss.forge.project.Project;
+import org.jboss.forge.project.facets.JavaSourceFacet;
 import org.jboss.forge.project.facets.events.InstallFacets;
 import org.jboss.forge.resources.DirectoryResource;
 import org.jboss.forge.resources.FileResource;
@@ -159,12 +160,12 @@ public class ErraiBusPlugin extends AbstractPlugin implements Plugin {
 	public void bus_setup_simple_applicaiton_gwt_config(final PipeOut out){
 		if(!this.isProjectSpecificFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
 			return;
-		DirectoryResource projectRoot = project.getProjectRoot();				
-        DirectoryResource sourceRoot = projectRoot.getOrCreateChildDirectory("src").
-        		getOrCreateChildDirectory("main").getOrCreateChildDirectory("java");
+		
+        final JavaSourceFacet java = project.getFacet(JavaSourceFacet.class);
+		final DirectoryResource defPackageResource = java.getBasePackageResource();        
         
         //create App.gwt config file
-        FileResource<?> confIndexPage = (FileResource<?>) sourceRoot.getChild("App.gwt.xml");
+        FileResource<?> confIndexPage = (FileResource<?>) defPackageResource.getChild("App.gwt.xml");
         InputStream cfStream = ErraiPlugin.class.getResourceAsStream("/errai-bus/java/App.gwt.xml.txt");
         confIndexPage.setContents(cfStream);
         out.println(ShellColor.YELLOW, String.format(ErraiBaseFacet.SUCCESS_MSG_FMT, "App.gwt.xml", "file"));
