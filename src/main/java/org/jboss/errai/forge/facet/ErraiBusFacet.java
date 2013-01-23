@@ -13,13 +13,4 @@ public class ErraiBusFacet extends ErraiBaseFacet{
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	boolean isFacetInstalled() {
-        if (!project.hasFacet(ErraiBusFacet.class)) {
-    		return false;
-        }
-		return true;
-	}
-
 }

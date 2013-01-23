@@ -81,13 +81,6 @@ public class ErraiCDIFacet extends ErraiBaseFacet{
 	}
 
 	@Override
-	boolean isFacetInstalled() {
-        if (!project.hasFacet(ErraiCDIFacet.class)) {
-    		return false;
-        }
-		return true;
-	}
-	@Override
 	public void installGWTPlugin() {
 		   String gwtVersion = "";
 		   for(Dependency dep : project.getFacet(DependencyFacet.class).getDependencies()){

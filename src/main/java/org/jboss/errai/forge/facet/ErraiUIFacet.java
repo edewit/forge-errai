@@ -30,12 +30,4 @@ public class ErraiUIFacet extends ErraiBaseFacet{
 	      }
 		
 	}
-
-	@Override
-	boolean isFacetInstalled() {
-        if (!project.hasFacet(ErraiUIFacet.class)) {
-    		return false;
-        }
-		return true;
-	}
 }
