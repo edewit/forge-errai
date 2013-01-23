@@ -75,13 +75,6 @@ public class ErraiJaxrsExample extends ErraiExample{
         InputStream sStream = ErraiPlugin.class.getResourceAsStream("/errai-jaxrs/java/server/CustomerServiceImpl.java.txt");
         serverIndexPage.setContents(Utils.replacePackageName(sStream,plugin.getProject()));
         pipeOut.println(ShellColor.YELLOW, String.format(ErraiBaseFacet.SUCCESS_MSG_FMT, "CustomerServiceImpl", "class"));
-
-        //create App.gwt config file
-        FileResource<?> confIndexPage = (FileResource<?>) sourceRoot.getChild("App.gwt.xml");
-        InputStream cfStream = ErraiPlugin.class.getResourceAsStream("/errai-jaxrs/java/App.gwt.xml.txt");
-        confIndexPage.setContents(cfStream);
-        pipeOut.println(ShellColor.YELLOW, String.format(ErraiBaseFacet.SUCCESS_MSG_FMT, "App.gwt.xml", "file"));
-        
     }
     
     /* (non-Javadoc)

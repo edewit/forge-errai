@@ -10,7 +10,9 @@ public class ErraiBusFacet extends ErraiBaseFacet{
 
 	@Override
 	void installErraiDeps() {
-		// TODO Auto-generated method stub
-		
 	}
+
+    @Override
+    protected void appendGwtModule() {
+    }
 }

@@ -22,7 +22,6 @@ public class ErraiCDIFacet extends ErraiBaseFacet{
     @Inject
     private ShellPrintWriter writer;
 
-
 	@Override
 	void installErraiDeps() {
 		  String erraiVersion = Versions.getInstance().getErrai_version();
@@ -80,7 +79,12 @@ public class ErraiCDIFacet extends ErraiBaseFacet{
        }
 	}
 
-	@Override
+    @Override
+    protected void appendGwtModule() {
+        appendGwtModule("org.jboss.errai.enterprise.CDI");
+    }
+
+    @Override
 	public void installGWTPlugin() {
 		   String gwtVersion = "";
 		   for(Dependency dep : project.getFacet(DependencyFacet.class).getDependencies()){

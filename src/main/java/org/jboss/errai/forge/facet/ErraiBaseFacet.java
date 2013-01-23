@@ -1,16 +1,23 @@
 package org.jboss.errai.forge.facet;
 
+import org.jboss.errai.forge.ErraiPlugin;
 import org.jboss.forge.maven.MavenPluginFacet;
 import org.jboss.forge.maven.plugins.ExecutionBuilder;
 import org.jboss.forge.maven.plugins.MavenPluginBuilder;
+import org.jboss.forge.parser.xml.Node;
+import org.jboss.forge.parser.xml.XMLParser;
 import org.jboss.forge.project.dependencies.Dependency;
 import org.jboss.forge.project.dependencies.DependencyBuilder;
 import org.jboss.forge.project.facets.BaseFacet;
 import org.jboss.forge.project.facets.DependencyFacet;
+import org.jboss.forge.project.facets.JavaSourceFacet;
 import org.jboss.forge.project.facets.WebResourceFacet;
+import org.jboss.forge.resources.DirectoryResource;
+import org.jboss.forge.resources.FileResource;
 import org.jboss.forge.shell.plugins.Alias;
 import org.jboss.forge.shell.plugins.RequiresFacet;
 
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,8 +39,28 @@ public abstract class ErraiBaseFacet extends BaseFacet {
         installBaseErraiDependencies();
         installGWTPlugin();
         installErraiDeps();
+        installBaseGwtModules();
+        appendGwtModule();
         return true;
     }
+
+    protected abstract void appendGwtModule();
+
+    protected void installBaseGwtModules() {
+        FileResource<?> moduleConfig = getModuleConfig();
+        if (!moduleConfig.exists()) {
+            InputStream cfStream = ErraiPlugin.class.getResourceAsStream("/App.gwt.xml.txt");
+            moduleConfig.setContents(cfStream);
+        }
+    }
+
+    void appendGwtModule(String moduleName) {
+        FileResource<?> moduleConfig = getModuleConfig();
+        Node xml = XMLParser.parse(moduleConfig.getResourceInputStream());
+        xml.createChild("inherits").attribute("name", moduleName);
+        moduleConfig.setContents(XMLParser.toXMLInputStream(xml));
+    }
+
 
     @Override
     public boolean isInstalled() {
@@ -110,4 +137,10 @@ public abstract class ErraiBaseFacet extends BaseFacet {
 
     }
 
+    public FileResource<?> getModuleConfig() {
+        JavaSourceFacet source = project.getFacet(JavaSourceFacet.class);
+        DirectoryResource sourceRoot = source.getBasePackageResource();
+
+        return (FileResource<?>) sourceRoot.getChild("App.gwt.xml");
+    }
 }

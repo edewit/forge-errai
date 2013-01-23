@@ -1,17 +1,20 @@
 package org.jboss.errai.forge;
 
 import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.errai.forge.facet.ErraiBaseFacet;
 import org.jboss.errai.forge.facet.ErraiBusFacet;
 import org.jboss.forge.project.Project;
 import org.jboss.forge.project.facets.ResourceFacet;
 import org.jboss.forge.resources.DirectoryResource;
+import org.jboss.forge.resources.FileResource;
 import org.jboss.forge.resources.Resource;
 import org.jboss.forge.test.AbstractShellTest;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.util.Scanner;
+
+import static org.junit.Assert.*;
 
 public class PluginTest extends AbstractShellTest {
     @Deployment
@@ -53,10 +56,51 @@ public class PluginTest extends AbstractShellTest {
     }
 
     private Project setupErraiProject() throws Exception {
+        return setupErraiProject("\n");
+    }
+
+    private Project setupErraiProject(String type) throws Exception {
         Project project = initializeJavaProject();
-        queueInputLines("\n", "\n"); //errai-bus, change project to war
+        queueInputLines(type, "\n"); //errai-bus, change project to war
         getShell().execute("errai setup");
         return project;
+    }
+
+    @Test
+    public void shouldCreateInitialGwtModuleConfig() throws Exception {
+        //given
+        Project project = setupErraiProject();
+
+        //then
+        FileResource<?> config = getGwtModuleConfig(project);
+        assertTrue(config.exists());
+    }
+
+    @Test
+    public void shouldAppendGwtModuleConfig() throws Exception {
+        //given
+        Project project = setupErraiProject("4"); //errai-ui
+
+        //then
+        Scanner scanner = null;
+        try {
+            FileResource<?> config = getGwtModuleConfig(project);
+            scanner = new Scanner(config.getResourceInputStream());
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if ("<inherits name=\"org.jboss.errai.ui.UI\"/>".equals(line.trim())) {
+                    return;
+                }
+            }
+            fail("didn't find errai ui module definition");
+        } finally {
+            if (scanner != null)
+                scanner.close();
+        }
+    }
+
+    private FileResource<?> getGwtModuleConfig(Project project) {
+        return project.getFacet(ErraiBaseFacet.class).getModuleConfig();
     }
 
 }

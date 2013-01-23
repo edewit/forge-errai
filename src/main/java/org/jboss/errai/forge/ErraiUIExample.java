@@ -91,13 +91,6 @@ public class ErraiUIExample extends ErraiExample{
         InputStream sStream = ErraiPlugin.class.getResourceAsStream("/errai-ui/java/server/MessageListener.java.txt");
         serverIndexPage.setContents(Utils.replacePackageName(sStream,plugin.getProject()));
         pipeOut.println(ShellColor.YELLOW, String.format(ErraiBaseFacet.SUCCESS_MSG_FMT, "MessageListener", "class"));
-
-        //create App.gwt config file
-        FileResource<?> confIndexPage = (FileResource<?>) sourceRoot.getChild("App.gwt.xml");
-        InputStream cfStream = ErraiPlugin.class.getResourceAsStream("/errai-ui/java/App.gwt.xml.txt");
-        confIndexPage.setContents(cfStream);
-        pipeOut.println(ShellColor.YELLOW, String.format(ErraiBaseFacet.SUCCESS_MSG_FMT, "App.gwt.xml", "file"));
-        
     }
     
     /* (non-Javadoc)

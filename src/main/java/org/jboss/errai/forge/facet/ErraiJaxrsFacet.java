@@ -31,4 +31,9 @@ public class ErraiJaxrsFacet extends ErraiBaseFacet{
 	      }
 		
 	}
+
+    @Override
+    protected void appendGwtModule() {
+        appendGwtModule("org.jboss.errai.enterprise.Jaxrs");
+    }
 }
