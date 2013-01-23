@@ -1,10 +1,5 @@
 package org.jboss.errai.forge;
 
-import java.util.Arrays;
-
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-
 import org.jboss.errai.forge.facet.ErraiBaseFacet;
 import org.jboss.errai.forge.facet.ErraiFacets;
 import org.jboss.errai.forge.facet.ErraiInstalled;
@@ -13,13 +8,12 @@ import org.jboss.forge.project.facets.events.InstallFacets;
 import org.jboss.forge.shell.ShellColor;
 import org.jboss.forge.shell.ShellMessages;
 import org.jboss.forge.shell.ShellPrompt;
-import org.jboss.forge.shell.plugins.Alias;
-import org.jboss.forge.shell.plugins.Command;
-import org.jboss.forge.shell.plugins.DefaultCommand;
-import org.jboss.forge.shell.plugins.Option;
-import org.jboss.forge.shell.plugins.PipeOut;
-import org.jboss.forge.shell.plugins.Plugin;
-import org.jboss.forge.shell.plugins.RequiresProject;
+import org.jboss.forge.shell.plugins.*;
+
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
+import java.lang.reflect.Constructor;
+import java.util.Arrays;
 
 /**
  * @author pslegr
@@ -69,13 +63,6 @@ public class ErraiPlugin implements Plugin {
     // confirmed working
     @Command("setup")
     public void setup(final PipeOut out) {
-//        if (!project.hasFacet(ErraiFacet.class)) {
-//            installFacets.fire(new InstallFacets(ErraiFacet.class));
-//        }
-//        if (project.hasFacet(ErraiFacet.class)) {
-//            ShellMessages.success(out, "ErraiFacet is configured.");
-//        }
-    	
 		ErraiFacets module = prompt.promptChoiceTyped("Which Errai module to install?",
         Arrays.asList(ErraiFacets.values()), ErraiFacets.ERRAI_BUS_FACET);
 		
@@ -83,7 +70,7 @@ public class ErraiPlugin implements Plugin {
 		     installFacets.fire(new InstallFacets(module.getFacet()));
 		}
 		if (project.hasFacet(module.getFacet())) {
-			 ShellMessages.success(out, module + " is configured.");
+			 ShellMessages.success(out, module + " Facet is configured.");
 		}
 		this.setModuleInstalled(false);		
 		
@@ -110,117 +97,75 @@ public class ErraiPlugin implements Plugin {
 
     @Command("install-errai-bus")
     public void installErraiBus(final PipeOut pipeOut) {
-        if (project.hasFacet(ErraiFacets.ERRAI_BUS_FACET.getFacet())) {
-        	if(!this.isModuleInstalled()){
-        		new ErraiBusExample(this, pipeOut).install();
-        	}
-        	else {
-        		pipeOut.println("Errai Bus is installed.");
-        	}
-        } else {
-            pipeOut.println("Errai Bus Facet is not installed. Use 'errai setup' to get started.");
-        }
+        installFacet(pipeOut, ErraiFacets.ERRAI_BUS_FACET);
     }
-    
+
     @Command("install-errai-cdi")
     public void installErraiCdi(final PipeOut pipeOut) {
-        if (project.hasFacet(ErraiFacets.ERRAI_CDI_FACET.getFacet())) {
-        	if(!this.isModuleInstalled()){
-        		new ErraiCdiExample(this, pipeOut).install();
-        	}
-        	else {
-        		pipeOut.println("Errai CDI is installed.");
-        	}
-        } else {
-            pipeOut.println("Errai CDI Facet is not installed. Use 'errai setup' to get started.");
-        }
+        installFacet(pipeOut, ErraiFacets.ERRAI_CDI_FACET);
     }
-    
+
     @Command("install-errai-jaxrs")
     public void installErraiJaxrs(final PipeOut pipeOut) {
-        if (project.hasFacet(ErraiFacets.ERRAI_JAXRS_FACET.getFacet())) {
-        	if(!this.isModuleInstalled()){
-        		new ErraiJaxrsExample(this, pipeOut).install();
-        	}
-        	else {
-        		pipeOut.println("Errai Jaxrs is installed.");
-        	}
-        } else {
-            pipeOut.println("Errai Jaxrs Facet is not installed. Use 'errai setup' to get started.");
-        }
+        installFacet(pipeOut, ErraiFacets.ERRAI_JAXRS_FACET);
     }
-    
+
     @Command("install-errai-ui")
     public void installErraiUI(final PipeOut pipeOut) {
-        if (project.hasFacet(ErraiFacets.ERRAI_UI_FACET.getFacet())) {
-        	if(!this.isModuleInstalled()){
-        		new ErraiUIExample(this, pipeOut).install();
-        	}
-        	else {
-        		pipeOut.println("Errai UI is installed.");
-        	}
-        } else {
-            pipeOut.println("Errai UI Facet is not installed. Use 'errai setup' to get started.");
-        }
+        installFacet(pipeOut, ErraiFacets.ERRAI_UI_FACET);
     }
-    
-    
-    //uninstall modules
     
     @Command("uninstall-errai-bus")
     public void uninstallErraiBus(final PipeOut pipeOut) {
-        if (project.hasFacet(ErraiFacets.ERRAI_BUS_FACET.getFacet())) {
-        	if(this.isModuleInstalled()){
-        		new ErraiBusExample(this, pipeOut).uninstall();
-        	}
-        	else {
-        		pipeOut.println("Errai Bus is not installed, can not uninstall.");
-        	}
-        } else {
-            pipeOut.println("Errai Bus Facet is not installed. Use 'errai setup' to get started.");
-        }
+        uninstall(pipeOut, ErraiFacets.ERRAI_BUS_FACET);
     }
-    
+
     @Command("uninstall-errai-cdi")
     public void uninstallErraiCdi(final PipeOut pipeOut) {
-        if (project.hasFacet(ErraiFacets.ERRAI_CDI_FACET.getFacet())) {
-        	if(this.isModuleInstalled()){
-        		new ErraiCdiExample(this, pipeOut).uninstall();
-        	}
-        	else {
-        		pipeOut.println("Errai CDI is not installed, can not uninstall.");
-        	}
-        } else {
-            pipeOut.println("Errai CDI Facet is not installed. Use 'errai setup' to get started.");
-        }
+        uninstall(pipeOut, ErraiFacets.ERRAI_CDI_FACET);
     }
     
     @Command("uninstall-errai-jaxrs")
     public void uninstallErraiJaxrs(final PipeOut pipeOut) {
-        if (project.hasFacet(ErraiFacets.ERRAI_JAXRS_FACET.getFacet())) {
-        	if(this.isModuleInstalled()){
-        		new ErraiJaxrsExample(this, pipeOut).uninstall();
-        	}
-        	else {
-        		pipeOut.println("Errai Jaxrs is is not installed, can not uninstall.");
-        	}
-        } else {
-            pipeOut.println("Errai Jaxrs Facet is not installed. Use 'errai setup' to get started.");
-        }
+        uninstall(pipeOut, ErraiFacets.ERRAI_JAXRS_FACET);
     }
     
     @Command("uninstall-errai-ui")
     public void uninstallErraiUI(final PipeOut pipeOut) {
-        if (project.hasFacet(ErraiFacets.ERRAI_UI_FACET.getFacet())) {
-        	if(this.isModuleInstalled()){
-        		new ErraiUIExample(this, pipeOut).uninstall();
-        	}
-        	else {
-        		pipeOut.println("Errai UI is is not installed, can not uninstall.");
-        	}
+        uninstall(pipeOut, ErraiFacets.ERRAI_UI_FACET);
+    }
+
+    private void installFacet(PipeOut pipeOut, ErraiFacets facet) {
+        toggleInstall(true, pipeOut, facet);
+    }
+
+    private void uninstall(PipeOut pipeOut, ErraiFacets facet) {
+        toggleInstall(false, pipeOut, facet);
+    }
+
+    private void toggleInstall(boolean install, PipeOut pipeOut, ErraiFacets facet) {
+        if (project.hasFacet(facet.getFacet())) {
+            if (this.isModuleInstalled()) {
+                ErraiExample erraiExample = newExampleInstaller(facet.getExample(), pipeOut);
+                if (install) {
+                    erraiExample.install();
+                } else {
+                    erraiExample.uninstall();
+                }
+            } else {
+                pipeOut.println(facet + " is " + (install ? "" : "not") + "installed.");
+            }
         } else {
-            pipeOut.println("Errai UI Facet is not installed. Use 'errai setup' to get started.");
+            pipeOut.println(facet + " Facet is not installed. Use 'errai setup' to get started.");
         }
     }
-    
+
+    private ErraiExample newExampleInstaller(Class<? extends ErraiExample> facet, PipeOut pipeOut) {
+        try {
+            Constructor<?> constructor = facet.getConstructor(ErraiPlugin.class, PipeOut.class);
+            return (ErraiExample) constructor.newInstance(this, pipeOut);
+        } catch (Exception e) {
+            throw new RuntimeException("could not instantiate example installer", e);
+        }
+    }
 }
