@@ -3,6 +3,7 @@ package org.jboss.errai.forge;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.errai.forge.facet.ErraiBaseFacet;
 import org.jboss.errai.forge.facet.ErraiBusFacet;
+import org.jboss.errai.forge.facet.ErraiCordovaFacet;
 import org.jboss.forge.project.Project;
 import org.jboss.forge.project.facets.ResourceFacet;
 import org.jboss.forge.resources.DirectoryResource;
@@ -82,17 +83,34 @@ public class PluginTest extends AbstractShellTest {
         Project project = setupErraiProject("4"); //errai-ui
 
         //then
+        assertModuleDefinition(project, "<inherits name=\"org.jboss.errai.ui.UI\"/>");
+    }
+
+    @Test
+    public void shouldAddCordova() throws Exception {
+        //given
+        Project project = setupErraiProject();
+
+        //when
+        getShell().execute("errai add-cordova");
+
+        //then
+        assertTrue(project.getFacet(ErraiCordovaFacet.class).isInstalled());
+        assertModuleDefinition(project, "<inherits name=\"org.jboss.errai.ui.Cordova\"/>");
+    }
+
+    private void assertModuleDefinition(Project project, String module) {
         Scanner scanner = null;
         try {
             FileResource<?> config = getGwtModuleConfig(project);
             scanner = new Scanner(config.getResourceInputStream());
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                if ("<inherits name=\"org.jboss.errai.ui.UI\"/>".equals(line.trim())) {
+                if (module.equals(line.trim())) {
                     return;
                 }
             }
-            fail("didn't find errai ui module definition");
+            fail("didn't find " + module + " definition");
         } finally {
             if (scanner != null)
                 scanner.close();

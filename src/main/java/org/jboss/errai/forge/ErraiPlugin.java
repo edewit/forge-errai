@@ -1,8 +1,10 @@
 package org.jboss.errai.forge;
 
 import org.jboss.errai.forge.facet.ErraiBaseFacet;
+import org.jboss.errai.forge.facet.ErraiCordovaFacet;
 import org.jboss.errai.forge.facet.ErraiFacets;
 import org.jboss.errai.forge.facet.ErraiInstalled;
+import org.jboss.forge.env.Configuration;
 import org.jboss.forge.project.Project;
 import org.jboss.forge.project.facets.events.InstallFacets;
 import org.jboss.forge.shell.ShellColor;
@@ -27,7 +29,9 @@ public class ErraiPlugin implements Plugin {
     
     @Inject
     private ShellPrompt prompt;
-    
+
+    @Inject
+    public Configuration configuration;
 
     public boolean isModuleInstalled() {
 		return ErraiInstalled.getInstance().isInstalled();
@@ -87,6 +91,7 @@ public class ErraiPlugin implements Plugin {
         pipeOut.println(ShellColor.BLUE, "install-errai-cdi: an example of Errai CDI-based application");
         pipeOut.println(ShellColor.BLUE, "install-errai-jaxrs: an example of Errai Jaxrs applicatiton");
         pipeOut.println(ShellColor.BLUE, "install-errai-ui: an example of Errai UI applicatiton");
+        pipeOut.println(ShellColor.BLUE, "add-cordova: add configuration to use this app together with cordova");
         pipeOut.println(ShellColor.BLUE, "uninstall-errai-bus: uninstall simple Errai Bus application");
         pipeOut.println(ShellColor.BLUE, "uninstall-errai-cdi: uninstal Errai CDI-based application");
         pipeOut.println(ShellColor.BLUE, "uninstall-errai-jaxrs: unistall Errai Jaxrs application");
@@ -135,6 +140,18 @@ public class ErraiPlugin implements Plugin {
         uninstall(pipeOut, ErraiFacets.ERRAI_UI_FACET);
     }
 
+    @Command("add-cordova")
+    public void addCordova(final PipeOut pipeOut) {
+        if (project.hasFacet(ErraiBaseFacet.class)) {
+            String location = prompt.prompt("What is your external server location", "http://localhost:8080/");
+
+            configuration.addProperty(ErraiCordovaFacet.URL, location);
+            installFacets.fire(new InstallFacets(ErraiCordovaFacet.class));
+        } else {
+            pipeOut.println("No Errai Facet is installed. Use 'errai setup' to get stated.");
+        }
+    }
+
     private void installFacet(PipeOut pipeOut, ErraiFacets facet) {
         toggleInstall(true, pipeOut, facet);
     }
@@ -153,7 +170,7 @@ public class ErraiPlugin implements Plugin {
                     erraiExample.uninstall();
                 }
             } else {
-                pipeOut.println(facet + " is " + (install ? "" : "not") + "installed.");
+                pipeOut.println(facet + " is " + (install ? "" : "not ") + "installed.");
             }
         } else {
             pipeOut.println(facet + " Facet is not installed. Use 'errai setup' to get started.");
