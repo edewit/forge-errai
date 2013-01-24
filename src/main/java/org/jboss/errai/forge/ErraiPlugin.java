@@ -1,8 +1,5 @@
 package org.jboss.errai.forge;
 
-import javax.enterprise.event.Event;
-import javax.inject.Inject;
-
 import org.jboss.errai.forge.enums.ErraiExamplesCommandsEnum;
 import org.jboss.errai.forge.enums.ErraiFacetsEnum;
 import org.jboss.errai.forge.enums.FacetsEnum;
@@ -19,15 +16,10 @@ import org.jboss.forge.project.Project;
 import org.jboss.forge.project.facets.events.InstallFacets;
 import org.jboss.forge.shell.ShellColor;
 import org.jboss.forge.shell.ShellMessages;
-import org.jboss.forge.shell.ShellPrompt;
-import org.jboss.forge.shell.plugins.Alias;
-import org.jboss.forge.shell.plugins.Command;
-import org.jboss.forge.shell.plugins.DefaultCommand;
-import org.jboss.forge.shell.plugins.Option;
-import org.jboss.forge.shell.plugins.PipeOut;
-import org.jboss.forge.shell.plugins.Plugin;
-import org.jboss.forge.shell.plugins.RequiresProject;
-import org.jboss.forge.shell.plugins.SetupCommand;
+import org.jboss.forge.shell.plugins.*;
+
+import javax.enterprise.event.Event;
+import javax.inject.Inject;
 
 /**
  * @author pslegr
@@ -38,18 +30,14 @@ public class ErraiPlugin extends AbstractPlugin implements Plugin {
 
     final Project project;
     final Event<InstallFacets> installFacets;
-    
-    @Inject
-    private ShellPrompt prompt;
-    
+
     private Velocity velocity;
-    
     private Generator generator;
     
     //config
     private boolean default_portable = false;
-    
-	public void setModuleInstalled(boolean isModuleInstalled) {
+
+    public void setModuleInstalled(boolean isModuleInstalled) {
 		ErraiInstalled.getInstance().setInstalled(isModuleInstalled);
 	}
 	
@@ -61,7 +49,6 @@ public class ErraiPlugin extends AbstractPlugin implements Plugin {
         this.installFacets = event;
         this.velocity = new Velocity(this.getProject());
         this.generator = new Generator(project, velocity);
-        
     }
 
     public Project getProject() {

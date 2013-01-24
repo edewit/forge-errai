@@ -160,15 +160,6 @@ public class ErraiBusPlugin extends AbstractPlugin implements Plugin {
 	public void bus_setup_simple_applicaiton_gwt_config(final PipeOut out){
 		if(!this.isProjectSpecificFacetInstalled(ErraiFacetsEnum.ERRAI_BUS.getFacet(),out))
 			return;
-		
-        final JavaSourceFacet java = project.getFacet(JavaSourceFacet.class);
-		final DirectoryResource defPackageResource = java.getBasePackageResource();        
-        
-        //create App.gwt config file
-        FileResource<?> confIndexPage = (FileResource<?>) defPackageResource.getChild("App.gwt.xml");
-        InputStream cfStream = ErraiPlugin.class.getResourceAsStream("/errai-bus/java/App.gwt.xml.txt");
-        confIndexPage.setContents(cfStream);
-        out.println(ShellColor.YELLOW, String.format(ErraiBaseFacet.SUCCESS_MSG_FMT, "App.gwt.xml", "file"));
 	}
 	
 	

@@ -32,10 +32,8 @@ public class ErraiJaxrsFacet extends ErraiBaseFacet{
 		
 	}
 
-	@Override boolean isFacetInstalled() {
-        if (!project.hasFacet(ErraiJaxrsFacet.class)) {
-    		return false;
-        }
-		return true;
-	}
+    @Override
+    protected void appendGwtModule() {
+        appendGwtModule("org.jboss.errai.enterprise.Jaxrs");
+    }
 }

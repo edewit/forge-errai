@@ -13,7 +13,7 @@ public class VelocityTest  extends TestCase{
 	}
 	 
 	 
-//	public void testExtractRemoteFromService(){
+	public void testExtractRemoteFromService(){
 //		File file = new File("src/main/java/org/jboss/errai/forge/template/Velocity.java");
 //		assertTrue(file.isFile());
 //		FileInputStream in=null;		
@@ -58,6 +58,5 @@ public class VelocityTest  extends TestCase{
 //            System.out.println(n.getName());
 //        }
 //		
-//	}
-	
+	}
 }

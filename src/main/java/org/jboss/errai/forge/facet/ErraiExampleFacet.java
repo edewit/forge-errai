@@ -14,13 +14,9 @@ public class ErraiExampleFacet extends BaseFacet
     
    @Override
    public boolean isInstalled(){
-       if (!project.hasFacet(ErraiExampleFacet.class)) {
-   		return false;
-       }
-		return true;
-   }	
-   
-		
+       return project.hasFacet(ErraiExampleFacet.class);
+   }
+
 	public boolean install (){
   	   prepareStructure();
 	   return true;

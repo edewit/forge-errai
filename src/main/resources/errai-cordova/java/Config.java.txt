@@ -1,0 +1,14 @@
+package ${package}.client.local;
+
+import org.jboss.errai.bus.client.framework.Configuration;
+
+/**
+ *
+ */
+public class Config implements Configuration {
+    @Override
+    public String getRemoteLocation() {
+        //TODO this probably needs to be environment specific (dev/test/prod)
+        return "${remoteLocation}";
+    }
+}

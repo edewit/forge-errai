@@ -76,25 +76,18 @@ public class ErraiUIFacet extends ErraiBaseFacet implements ScaffoldProvider {
 	@Override void  installErraiFacetSpecifics() {
 		  String erraiVersion = Versions.getInstance().getErrai_version();
 		  String javaeeVersion = Versions.getInstance().getJavaee_version();
-		  
+
 	      List<? extends Dependency> dependencies = Arrays.asList(
 	              DependencyBuilder.create("org.jboss.errai:errai-javaee-all:" + erraiVersion),
 	              DependencyBuilder.create("org.jboss.spec:jboss-javaee-6.0:" + javaeeVersion).setScopeType("provided").setPackagingType("pom")
 	      );
 
-		   
+
 	      DependencyFacet deps = project.getFacet(DependencyFacet.class);
 	      for (Dependency dependency : dependencies) {
 	         deps.addDirectDependency(dependency);
 	      }
-		
-	}
 
-	@Override boolean isFacetInstalled() {
-        if (!project.hasFacet(ErraiUIFacet.class)) {
-    		return false;
-        }
-		return true;
 	}
 
     public List<Resource<?>> setup(String targetDir, final Resource<?> template, final boolean overwrite) {
@@ -107,7 +100,7 @@ public class ErraiUIFacet extends ErraiBaseFacet implements ScaffoldProvider {
 
     public List<Resource<?>> generateTemplates(String s, boolean b) {
         System.out.println("generateTemplates");
-        return Collections.emptyList();  //To change body of implemented methods use File | Settings | File Templates.
+        return Collections.emptyList();
     }
 
     public List<Resource<?>> generateIndex(String targetDir, final Resource<?> template, final boolean overwrite) {
@@ -157,4 +150,11 @@ public class ErraiUIFacet extends ErraiBaseFacet implements ScaffoldProvider {
         }
     }
 
+    @Override
+    protected void appendGwtModule() {
+        appendGwtModule("org.jboss.errai.ui.UI");
+        appendGwtModule("org.jboss.errai.databinding.DataBinding");
+        appendGwtModule("org.jboss.errai.enterprise.CDI");
+
+    }
 }
